@@ -5,12 +5,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
 
@@ -24,22 +32,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//  http://localhost/api/
-//  http://10.0.2.2:3000
+
 Future<String> getUser() async {
   try {
-    var response = await Dio().get('http://10.0.2.2:3000');
-    // var response = await Dio().get('http://jsonplaceholder.typicode.com/albums/100');
-      return 'Success response.${response.toString()}';
-    // print(response);
+    var response = await Dio().get('https://192.168.30.63/admin/auth/apicall');
+    // client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    return 'Success response.${response.toString()}';
   } catch (e) {
-    // print(e);
     return 'Failed response. ${e.toString()}';
   }
 }
 
-class MyHomePage extends StatelessWidget {
 
+class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +59,7 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Container(child: Text('Row 1 -- ${InternetAddress.loopbackIPv4.toString()}',),),
+            Container(child: Text('Row 1',),),
             Container(child: Text('Row 2'),),
 
             FutureBuilder<String>(
