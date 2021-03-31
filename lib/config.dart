@@ -1,0 +1,1 @@
+const String baseUri  = 'https://192.168.30.63/admin/auth';

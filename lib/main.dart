@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'config.dart';
+
 
 
 class MyHttpOverrides extends HttpOverrides{
@@ -13,6 +15,7 @@ class MyHttpOverrides extends HttpOverrides{
       ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }
+
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
@@ -33,13 +36,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<String> getUser() async {
+Future<Response> getUser() async {
   try {
-    var response = await Dio().get('https://192.168.30.63/admin/auth/apicall');
+    Response response = await Dio().get('$baseUri/userdata');
     // client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    return 'Success response.${response.toString()}';
+    // return 'Success response.${response}';
+    return response;
   } catch (e) {
-    return 'Failed response. ${e.toString()}';
+    // return 'Failed response. ${e.toString()}';
+    return e;
   }
 }
 
@@ -48,7 +53,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<String> _user = getUser();
+    Future<Response> _user = getUser();
 
     return Scaffold(
       appBar: AppBar(
@@ -62,21 +67,20 @@ class MyHomePage extends StatelessWidget {
             Container(child: Text('Row 1',),),
             Container(child: Text('Row 2'),),
 
-            FutureBuilder<String>(
+            FutureBuilder<Response>(
               future: _user,
               builder: (context, snapshot){
                 if (snapshot.hasData) {
+                  Map<String, dynamic> _user = jsonDecode(snapshot.data.toString());
 
-                  return Text('${snapshot.data} ');
+                  return Text('${_user['username']} ');
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
-                return Text('Waiting...');
+                return Text('No data were got.');
                 // return CircularProgressIndicator();
               },
             ),
-
-
           ],
         ),
       ),
