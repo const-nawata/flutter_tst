@@ -48,7 +48,6 @@ Future<Response> getUser() async {
   }
 }
 
-
 class MyHomePage extends StatelessWidget {
 
   @override
@@ -71,9 +70,8 @@ class MyHomePage extends StatelessWidget {
               future: _user,
               builder: (context, snapshot){
                 if (snapshot.hasData) {
-                  Map<String, dynamic> _user = jsonDecode(snapshot.data.toString());
-
-                  return Text('${_user['username']} ');
+                  Map<String, dynamic> _userdata  = snapshot.data.data;
+                  return Text('${_userdata['username']} ');
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
