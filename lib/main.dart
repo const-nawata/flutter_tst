@@ -1,6 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
+import 'api_client.dart';
+import 'package:dio/dio.dart';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -27,39 +42,70 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
-      _counter++;
+      // _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final _dio = Dio(); // Provide a dio instance
+    final _uclient = RestUserClient(_dio);
+
+    // Future<User> _user = _uclient.getUser(17).then((userdata) => userdata);
+
+    Future<List<User>> _users =
+        _uclient.getUsers().then((usersdata) => usersdata);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: FutureBuilder<List<User>>(
+          future: _users,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<User> _entries = snapshot.data;
+              List<Color> _colors = [Color(0xFFE6D8FF), Color(0xFFFFD3F9)];
+
+              return Container(
+                color: Color(0xFFFFF6C1),
+                margin: EdgeInsets.only(
+                  top: 20,
+                  left: 5,
+                  right: 5,
+                ),
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                height: 400,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(5.0),
+                  itemCount: _entries.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    int _colorInd = index % 2;
+
+                    return Container(
+                      height: 35,
+                      child: Center(
+                        child: Text(
+                          'User: ${_entries[index].firstname} ${_entries[index].lastname} (${_entries[index].username})',
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            backgroundColor: _colors[_colorInd],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+
+            return Text('Waiting...');
+          }),
     );
   }
 }
