@@ -29,7 +29,6 @@ class Task {
       createdAt: json['createdAt'],
     );
   }
-  // Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   // factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
   // Map<String, dynamic> toJson() => _$TaskToJson(this);
@@ -61,5 +60,14 @@ class User {
       firstname: json['firstname'],
       lastname: json['lastname'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'firstname': this.firstname,
+      'lastname': this.lastname,
+      'username': this.username
+    };
   }
 }
