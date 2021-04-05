@@ -43,7 +43,10 @@ class MyHomePage extends StatelessWidget {
     final _dio = Dio(); // Provide a dio instance
     final _uclient = RestUserClient(_dio);
 
-    Future<User> _user = _uclient.getUser().then((userdata) => userdata);
+    Future<User> _user = _uclient.getUser(17).then((userdata) => userdata);
+
+    Future<List<User>> _users =
+        _uclient.getUsers().then((usersdata) => usersdata);
 
     return Scaffold(
       appBar: AppBar(

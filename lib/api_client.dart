@@ -39,7 +39,10 @@ abstract class RestUserClient {
   factory RestUserClient(Dio dio, {String baseUrl}) = _RestUserClient;
 
   @GET("/userdata")
-  Future<User> getUser();
+  Future<List<User>> getUsers();
+
+  @GET("/userdata?userId={id}")
+  Future<User> getUser(@Path("id") int userId);
 }
 
 @JsonSerializable()
