@@ -88,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView.builder(
                       padding: const EdgeInsets.all(5.0),
                       itemCount: _entries.length,
+                      itemExtent: 33,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
@@ -99,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 'User: ${_entries[index].firstname} ${_entries[index].lastname} (${_entries[index].username})',
                                 style: TextStyle(
-                                  fontSize: 25.0,
+                                  fontSize: 15.0,
                                   fontWeight: FontWeight.bold,
                                   backgroundColor: _colors[index % 2],
                                 ),
