@@ -5,6 +5,7 @@ import 'models/data.dart';
 void main() {
   runApp(MyApp());
 }
+/*
 
 class MyApp extends StatelessWidget {
   @override
@@ -23,11 +24,33 @@ class MyApp extends StatelessWidget {
   }
 }
 
+*/
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Task App Provider',
+      theme: ThemeData(
+        primaryColor: Color(0xFF553E13),
+        accentColor: Color(0xFFFFE380),
+      ),
+      home: ChangeNotifierProvider<Data>(
+        create: (context) => Data(),
+        child: HomePage(),
+      ),
+    );
+  }
+}
+
 class HomePage extends StatelessWidget {
   final String data;
   final Function onChange;
 
-  HomePage({@required this.data, @required this.onChange});
+  HomePage({
+    @required this.data,
+    @required this.onChange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +94,29 @@ class Widget3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(context.watch<Data>().getData),
+      padding: EdgeInsets.only(top: 20.0),
+      child: Text(
+        context.watch<Data>().getData,
+        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
+/*
+
+class Widget4 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Text(
+        context.watch<Data>().getData,
+        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+*/
 
 class MyTextField extends StatelessWidget {
   @override
