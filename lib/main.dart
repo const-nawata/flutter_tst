@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/data.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -68,7 +67,6 @@ class Widget2 extends StatelessWidget {
   }
 }
 
-//  Text(context.watch<Data>().getData)
 class Widget3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
