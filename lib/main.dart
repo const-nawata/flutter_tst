@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Task App Provider',
         theme: ThemeData(
-          primaryColor: Color(0xFFFF0000),
-          accentColor: Color(0xFFFF8A80),
+          primaryColor: Color(0xFF553E13),
+          accentColor: Color(0xFFFFE380),
         ),
         home: HomePage(),
       ),
