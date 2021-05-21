@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'config.dart';
 
-
-
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -24,7 +22,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Dio Demo',
       theme: ThemeData(
@@ -49,7 +46,6 @@ Future<Response> getUser() async {
 }
 
 class MyHomePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     Future<Response> _user = getUser();
@@ -63,17 +59,20 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Container(child: Text('Row 1',),),
-            Container(child: Text('Row 2'),),
-
+            Container(
+              child: Text('Row 1'),
+            ),
+            Container(
+              child: Text('Row 2'),
+            ),
             FutureBuilder<Response>(
               future: _user,
-              builder: (context, snapshot){
+              builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  Map<String, dynamic> _userdata  = snapshot.data.data;
+                  Map<String, dynamic> _userdata = snapshot.data.data;
                   return Text('${_userdata['username']} ');
                 } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
+                  return Text("${snapshot.error} // W");
                 }
                 return Text('No data were got.');
                 // return CircularProgressIndicator();
