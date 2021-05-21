@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'company.dart';
 import 'config.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -14,7 +15,13 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+Future<void> main() async {
+
+  List<Company> _response = await getCompanies();
+
+
+  print('${_response[0].name} / ${_response[0].description}');
+
   HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
@@ -33,13 +40,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<Response> getUser() async {
+Future<List<Company>> getCompanies() async {
   try {
-    Response response = await Dio().get('$baseUri/userdata');
+    Response response = await Dio().get('$baseUri/companies');
     // client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
     // return 'Success response.${response}';
-    return response;
+    // print(response.data.toString());
+
+    // return response.data;
+    return (response.data as List).map((x) => Company.fromJson(x)).toList();
   } catch (e) {
+
+// print('ERRRRRRRORRRRR: ${e}');
+
     // return 'Failed response. ${e.toString()}';
     return e;
   }
@@ -48,7 +61,8 @@ Future<Response> getUser() async {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future<Response> _user = getUser();
+    // Future<Response> _response = getCompanies();
+
 
     return Scaffold(
       appBar: AppBar(
@@ -65,19 +79,20 @@ class MyHomePage extends StatelessWidget {
             Container(
               child: Text('Row 2'),
             ),
-            FutureBuilder<Response>(
-              future: _user,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  Map<String, dynamic> _userdata = snapshot.data.data;
-                  return Text('${_userdata['username']} ');
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error} // W");
-                }
-                return Text('No data were got.');
-                // return CircularProgressIndicator();
-              },
-            ),
+
+            // FutureBuilder<Response>(
+            //   future: _companies,
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       Map<String, dynamic> _userdata = snapshot.data.data;
+            //       return Text('${_userdata['username']} ');
+            //     } else if (snapshot.hasError) {
+            //       return Text("${snapshot.error} // W");
+            //     }
+            //     return Text('No data were got.');
+            //     // return CircularProgressIndicator();
+            //   },
+            // ),
           ],
         ),
       ),
