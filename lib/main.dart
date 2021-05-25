@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'api_client.dart';
@@ -169,17 +170,82 @@ class MyHomePage extends StatelessWidget {
                         margin: EdgeInsets.only(top: 20.0),
                         child: Row(
                           children: [
-                            Text(
-                              'Address: ',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(
+                                'Company: ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text('${_company.name}'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(
+                                'Address: ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             Text('${_company.address.country}, ${_company.address.city}'),
                           ],
                         ),
-                      )
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        height: 50.0,
+                        child: Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(
+                                'Description : ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: Text(
+                                '${_company.address.country}, ${_company.elevator_pitch}',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(
+                                'Partner: ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text('${_chunk.screening.partner.name}'),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 );

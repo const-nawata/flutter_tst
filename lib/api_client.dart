@@ -96,14 +96,42 @@ class StartupsData {
 class ChunkItem {
   String startup_id;
   CompanyDetails company_details;
+  String status;
+  ChunkItemScreening screening;
 
   ChunkItem({
     required this.startup_id,
     required this.company_details,
+    required this.status,
+    required this.screening,
   });
 
   factory ChunkItem.fromJson(Map<String, dynamic> json) => _$ChunkItemFromJson(json);
   Map<String, dynamic> toJson() => _$ChunkItemToJson(this);
+}
+
+@JsonSerializable()
+class ChunkItemScreening {
+  ScreeningPartner partner;
+
+  ChunkItemScreening({
+    required this.partner,
+  });
+
+  factory ChunkItemScreening.fromJson(Map<String, dynamic> json) => _$ChunkItemScreeningFromJson(json);
+  Map<String, dynamic> toJson() => _$ChunkItemScreeningToJson(this);
+}
+
+@JsonSerializable()
+class ScreeningPartner {
+  String name;
+
+  ScreeningPartner({
+    required this.name,
+  });
+
+  factory ScreeningPartner.fromJson(Map<String, dynamic> json) => _$ScreeningPartnerFromJson(json);
+  Map<String, dynamic> toJson() => _$ScreeningPartnerToJson(this);
 }
 
 @JsonSerializable()
@@ -112,12 +140,14 @@ class CompanyDetails {
   CompanyAddress address;
   String name;
   String elevator_pitch;
+  List<String> industry;
 
   CompanyDetails({
     required this.logo,
     required this.address,
     required this.name,
     required this.elevator_pitch,
+    required this.industry,
   });
 
   factory CompanyDetails.fromJson(Map<String, dynamic> json) => _$CompanyDetailsFromJson(json);

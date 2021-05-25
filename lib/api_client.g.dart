@@ -68,12 +68,39 @@ ChunkItem _$ChunkItemFromJson(Map<String, dynamic> json) {
     startup_id: json['startup_id'] as String,
     company_details: CompanyDetails.fromJson(
         json['company_details'] as Map<String, dynamic>),
+    status: json['status'] as String,
+    screening:
+        ChunkItemScreening.fromJson(json['screening'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$ChunkItemToJson(ChunkItem instance) => <String, dynamic>{
       'startup_id': instance.startup_id,
       'company_details': instance.company_details,
+      'status': instance.status,
+      'screening': instance.screening,
+    };
+
+ChunkItemScreening _$ChunkItemScreeningFromJson(Map<String, dynamic> json) {
+  return ChunkItemScreening(
+    partner: ScreeningPartner.fromJson(json['partner'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$ChunkItemScreeningToJson(ChunkItemScreening instance) =>
+    <String, dynamic>{
+      'partner': instance.partner,
+    };
+
+ScreeningPartner _$ScreeningPartnerFromJson(Map<String, dynamic> json) {
+  return ScreeningPartner(
+    name: json['name'] as String,
+  );
+}
+
+Map<String, dynamic> _$ScreeningPartnerToJson(ScreeningPartner instance) =>
+    <String, dynamic>{
+      'name': instance.name,
     };
 
 CompanyDetails _$CompanyDetailsFromJson(Map<String, dynamic> json) {
@@ -82,6 +109,8 @@ CompanyDetails _$CompanyDetailsFromJson(Map<String, dynamic> json) {
     address: CompanyAddress.fromJson(json['address'] as Map<String, dynamic>),
     name: json['name'] as String,
     elevator_pitch: json['elevator_pitch'] as String,
+    industry:
+        (json['industry'] as List<dynamic>).map((e) => e as String).toList(),
   );
 }
 
@@ -91,6 +120,7 @@ Map<String, dynamic> _$CompanyDetailsToJson(CompanyDetails instance) =>
       'address': instance.address,
       'name': instance.name,
       'elevator_pitch': instance.elevator_pitch,
+      'industry': instance.industry,
     };
 
 CompanyLogo _$CompanyLogoFromJson(Map<String, dynamic> json) {
