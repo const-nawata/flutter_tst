@@ -1,10 +1,20 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'api_client.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -33,11 +43,14 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _dio = Dio(); // Provide a dio instance
-    final _uclient = RestUserClient(_dio);
+    // final _uclient = RestUserClient(_dio);
+    final _invclient = RestInvestorClient(_dio);
 
-    Future<User> _user = _uclient.getUser(4).then((userdata) => userdata);
+    // Future<User> _user = _uclient.getUser(1162).then((userdata) => userdata);
 
-    Future<List<User>> _users = _uclient.getUsers().then((usersdata) => usersdata);
+    // Future<List<User>> _users = _uclient.getUsers().then((usersdata) => usersdata);
+
+    Future<Startups> _startups = _invclient.getStartups().then((userdata) => userdata);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +62,7 @@ class MyHomePage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 18.0),
             child: Center(
               child: Text(
-                "User's Data",
+                "Company Data",
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
@@ -57,6 +70,8 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
           ),
+
+          /*
           FutureBuilder<User>(
             future: _user,
             builder: (context, snapshot) {
@@ -92,32 +107,6 @@ class MyHomePage extends StatelessWidget {
                         ],
                       ),
 
-                      FutureBuilder<List<User>>(
-                        future: _users,
-                        builder: (context, snapshot1) {
-                          if (snapshot1.hasData && snapshot1.data != null) {
-                            return Container(
-                              margin: EdgeInsets.only(top: 20.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Users count: ${snapshot1.data!.length}',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else if (snapshot1.hasError) {
-                            return Text("Error: ${snapshot1.error}");
-                          } else {
-                            return Text("Wait...");
-                          }
-                        },
-                      ),
-
                       // Text('Users count: ${_users.length}')
                     ],
                   ),
@@ -137,6 +126,68 @@ class MyHomePage extends StatelessWidget {
                 );
               }
               // return CircularProgressIndicator();
+            },
+          ),
+
+*/
+
+          FutureBuilder<Startups>(
+            future: _startups,
+            builder: (context, snapshot1) {
+              if (snapshot1.hasData && snapshot1.data != null) {
+                Startups _dt = snapshot1.data!;
+                ChunkItem _chunk = _dt.data.chunk[3];
+                CompanyDetails _company = _chunk.company_details;
+
+                return Container(
+                  margin: EdgeInsets.only(top: 20.0, left: 20.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Startup result: ${snapshot1.data!.result} \n${_chunk.startup_id}',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            width: 56.0,
+                            height: 56.0,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black12),
+                              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                              image: DecorationImage(
+                                image: NetworkImage(_company.logo.url),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Address: ',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text('${_company.address.country}, ${_company.address.city}'),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              } else if (snapshot1.hasError) {
+                return Text("Error5: ${snapshot1.error.toString()}");
+              } else {
+                return Text("Wait...");
+              }
             },
           ),
         ],

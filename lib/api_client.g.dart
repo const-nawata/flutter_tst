@@ -38,6 +38,85 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'lastname': instance.lastname,
     };
 
+Startups _$StartupsFromJson(Map<String, dynamic> json) {
+  return Startups(
+    result: json['result'] as bool,
+    data: StartupsData.fromJson(json['data'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$StartupsToJson(Startups instance) => <String, dynamic>{
+      'result': instance.result,
+      'data': instance.data,
+    };
+
+StartupsData _$StartupsDataFromJson(Map<String, dynamic> json) {
+  return StartupsData(
+    chunk: (json['chunk'] as List<dynamic>)
+        .map((e) => ChunkItem.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
+}
+
+Map<String, dynamic> _$StartupsDataToJson(StartupsData instance) =>
+    <String, dynamic>{
+      'chunk': instance.chunk,
+    };
+
+ChunkItem _$ChunkItemFromJson(Map<String, dynamic> json) {
+  return ChunkItem(
+    startup_id: json['startup_id'] as String,
+    company_details: CompanyDetails.fromJson(
+        json['company_details'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$ChunkItemToJson(ChunkItem instance) => <String, dynamic>{
+      'startup_id': instance.startup_id,
+      'company_details': instance.company_details,
+    };
+
+CompanyDetails _$CompanyDetailsFromJson(Map<String, dynamic> json) {
+  return CompanyDetails(
+    logo: CompanyLogo.fromJson(json['logo'] as Map<String, dynamic>),
+    address: CompanyAddress.fromJson(json['address'] as Map<String, dynamic>),
+    name: json['name'] as String,
+    elevator_pitch: json['elevator_pitch'] as String,
+  );
+}
+
+Map<String, dynamic> _$CompanyDetailsToJson(CompanyDetails instance) =>
+    <String, dynamic>{
+      'logo': instance.logo,
+      'address': instance.address,
+      'name': instance.name,
+      'elevator_pitch': instance.elevator_pitch,
+    };
+
+CompanyLogo _$CompanyLogoFromJson(Map<String, dynamic> json) {
+  return CompanyLogo(
+    url: json['url'] as String,
+  );
+}
+
+Map<String, dynamic> _$CompanyLogoToJson(CompanyLogo instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+    };
+
+CompanyAddress _$CompanyAddressFromJson(Map<String, dynamic> json) {
+  return CompanyAddress(
+    country: json['country'] as String,
+    city: json['city'] as String,
+  );
+}
+
+Map<String, dynamic> _$CompanyAddressToJson(CompanyAddress instance) =>
+    <String, dynamic>{
+      'country': instance.country,
+      'city': instance.city,
+    };
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
@@ -117,6 +196,44 @@ class _RestUserClient implements RestUserClient {
                 queryParameters: queryParameters, data: _data)
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = User.fromJson(_result.data!);
+    return value;
+  }
+
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
+      if (T == String) {
+        requestOptions.responseType = ResponseType.plain;
+      } else {
+        requestOptions.responseType = ResponseType.json;
+      }
+    }
+    return requestOptions;
+  }
+}
+
+class _RestInvestorClient implements RestInvestorClient {
+  _RestInvestorClient(this._dio, {this.baseUrl}) {
+    baseUrl ??= 'https://192.168.30.63/admin/';
+  }
+
+  final Dio _dio;
+
+  String? baseUrl;
+
+  @override
+  Future<Startups> getStartups() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<Startups>(
+            Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
+                .compose(_dio.options, '/investors/startups',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = Startups.fromJson(_result.data!);
     return value;
   }
 
