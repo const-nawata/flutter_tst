@@ -6,6 +6,40 @@ part of 'api_client.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+RefreshTokenResponse _$RefreshTokenResponseFromJson(Map<String, dynamic> json) {
+  return RefreshTokenResponse(
+    result: json['result'] as bool,
+    data: json['data'] == null
+        ? null
+        : RefreshTokenData.fromJson(json['data'] as Map<String, dynamic>),
+    error_message: json['error_message'] as String,
+    error_code: json['error_code'] as int?,
+  );
+}
+
+Map<String, dynamic> _$RefreshTokenResponseToJson(
+        RefreshTokenResponse instance) =>
+    <String, dynamic>{
+      'result': instance.result,
+      'data': instance.data,
+      'error_message': instance.error_message,
+      'error_code': instance.error_code,
+    };
+
+RefreshTokenData _$RefreshTokenDataFromJson(Map<String, dynamic> json) {
+  return RefreshTokenData(
+    access_token: json['access_token'] as String,
+    access_token_expiration_date:
+        json['access_token_expiration_date'] as String,
+  );
+}
+
+Map<String, dynamic> _$RefreshTokenDataToJson(RefreshTokenData instance) =>
+    <String, dynamic>{
+      'access_token': instance.access_token,
+      'access_token_expiration_date': instance.access_token_expiration_date,
+    };
+
 Startups _$StartupsFromJson(Map<String, dynamic> json) {
   return Startups(
     result: json['result'] as bool,
@@ -127,7 +161,7 @@ Map<String, dynamic> _$CompanyAddressToJson(CompanyAddress instance) =>
 
 class _RestInvestorClient implements RestInvestorClient {
   _RestInvestorClient(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'https://192.168.30.63/admin/';
+    baseUrl ??= 'http://uat-aws-api.fundsup.co/';
   }
 
   final Dio _dio;
@@ -135,17 +169,37 @@ class _RestInvestorClient implements RestInvestorClient {
   String? baseUrl;
 
   @override
-  Future<Startups> getStartups() async {
+  Future<Startups> getStartups(token, limit, offset) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'offset': offset
+    };
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<Startups>(
-            Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
-                .compose(_dio.options, '/investors/startups',
+        _setStreamType<Startups>(Options(
+                method: 'GET',
+                headers: <String, dynamic>{r'access_token': token},
+                extra: _extra)
+            .compose(_dio.options, '/investors/startups',
+                queryParameters: queryParameters, data: _data)
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = Startups.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<RefreshTokenResponse> refreshToken(refreshToken) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'refreshToken': refreshToken};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<RefreshTokenResponse>(
+            Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
+                .compose(_dio.options, '/auth/refresh/accesstoken',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Startups.fromJson(_result.data!);
+    final value = RefreshTokenResponse.fromJson(_result.data!);
     return value;
   }
 
