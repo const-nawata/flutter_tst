@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'api_client.dart';
+import 'api/api_client.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
