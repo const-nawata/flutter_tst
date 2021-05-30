@@ -6,11 +6,30 @@ void main() {
   runApp(MyApp());
 }
 
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider<Data>(
+//       create: (context) => Data(),
+//       child: MaterialApp(
+//         title: 'Task App Provider',
+//         theme: ThemeData(
+//           primaryColor: Color(0xFF553E13),
+//           accentColor: Color(0xFFFFE380),
+//         ),
+//         home: HomePage(),
+//       ),
+//     );
+//   }
+// }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Data>(
-      create: (context) => Data(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Data()),
+      ],
       child: MaterialApp(
         title: 'Task App Provider',
         theme: ThemeData(
@@ -24,10 +43,9 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  final String data;
-  final Function onChange;
-
-  HomePage({@required this.data, @required this.onChange});
+  // final String data;
+  // final Function onChange;
+  // HomePage({@required this.data, @required this.onChange});
 
   @override
   Widget build(BuildContext context) {
